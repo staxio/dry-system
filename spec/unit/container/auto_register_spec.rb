@@ -24,6 +24,24 @@ RSpec.describe Dry::System::Container, ".auto_register!" do
     end
   end
 
+  context "standard loader finalization with pre-registered components" do
+    before do
+      class Test::Container < Dry::System::Container
+        configure do |config|
+          config.root = SPEC_ROOT.join("fixtures").realpath
+          config.component_dirs.add "components" do |dir|
+            dir.default_namespace = "test"
+          end
+        end
+      end
+    end
+
+    it "doesn't auto register components that have been pre-registered" do
+      expect(Test::Container["foo"]).to be_an_instance_of(Test::Foo)
+      Test::Container.finalize!
+    end
+  end
+
   context "standard loader with a default namespace configured" do
     before do
       class Test::Container < Dry::System::Container

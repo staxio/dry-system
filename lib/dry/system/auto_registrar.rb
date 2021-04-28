@@ -51,7 +51,7 @@ module Dry
       end
 
       def register_component?(component)
-        !container.registered?(component) && component.auto_register?
+        !container.registered?(component.identifier) && component.auto_register?
       end
     end
   end
